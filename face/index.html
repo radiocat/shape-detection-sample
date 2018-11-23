@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Shape Detection API Sample</title>
+</head>
+
+<body>
+    <img src="people.jpg" id="image" alt="people">
+    <canvas id="canvas"></canvas>
+    <div>
+        <span><a href="https://unsplash.com/photos/h8mMTmO7lew" target="_blank" >Photo by @rawpixel on Unsplash</a></span>
+    </div>
+
+    <script>
+        const image = document.getElementById('image');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let scale = 1;
+
+        image.onload = function()
+        {
+            canvas.width = image.width;
+            canvas.height = image.height;
+            ctx.drawImage(image,
+                0, 0, image.width, image.height,
+                0, 0, canvas.width, canvas.height);
+            scale = canvas.width / image.width;
+            detect();
+        };
+
+        function detect()
+        {
+            if (window.FaceDetector == undefined)
+            {
+                console.error('Face Detection not supported');
+                return;
+            }
+            const faceDetector = new FaceDetector();
+            faceDetector.detect(image)
+                .then(faces =>
+                {
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = 'red';
+                    for (let face of faces)
+                    {
+                        ctx.rect(Math.floor(face.boundingBox.x * scale),
+                            Math.floor(face.boundingBox.y * scale),
+                            Math.floor(face.boundingBox.width * scale),
+                            Math.floor(face.boundingBox.height *
+                                scale));
+                        ctx.stroke();
+                        console.log(face);
+                    }
+                })
+                .catch((e) =>
+                {
+                    console.error("Boo, Face Detection failed: " + e);
+                });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "shape-detection-sample",
+  "version": "1.0.0",
+  "description": "ShapeDetection Sample",
+  "main": "express.js",
+  "dependencies": {
+    "express": "^4.16.4",
+    "serve-index": "^1.9.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/radiocat/shape-detection-sample.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/radiocat/shape-detection-sample/issues"
+  },
+  "homepage": "https://github.com/radiocat/shape-detection-sample#readme"
+}
