@@ -9,6 +9,7 @@
   },
   "devDependencies": {},
   "scripts": {
+    "serve": "node ./server.js 3000",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
