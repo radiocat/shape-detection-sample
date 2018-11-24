@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Shape Detection API Sample</title>
+</head>
+
+<body>
+    <img src="radiocat.jpg" id="image" alt="text">
+    <canvas id="canvas"></canvas>
+    <div>
+        Text : <span id="rawValue"></span>
+    </div>
+
+    <script>
+        const image = document.getElementById('image');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let scale = 1;
+
+        image.onload = function()
+        {
+            canvas.width = image.width;
+            canvas.height = image.height;
+            ctx.drawImage(image,
+                0, 0, image.width, image.height,
+                0, 0, canvas.width, canvas.height);
+            scale = canvas.width / image.width;
+            qrdetect();
+        };
+
+        function qrdetect()
+        {
+            if (window.TextDetector == undefined)
+            {
+                console.error('Text Detection not supported');
+                return;
+            }
+            var textDetector = new TextDetector();
+            textDetector.detect(image)
+                .then(texts =>
+                {
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = 'red';
+                    for (let text of texts)
+                    {
+                        ctx.rect(Math.floor(text.boundingBox.x * scale),
+                            Math.floor(text.boundingBox.y * scale),
+                            Math.floor(text.boundingBox.width *
+                                scale),
+                            Math.floor(text.boundingBox.height *
+                                scale));
+                        ctx.stroke();
+                        console.log("value : " + text.rawValue);
+                        console.log(text);
+                        document.getElementById('rawValue').innerHTML =
+                            text.rawValue;
+                    }
+                })
+                .catch((e) =>
+                {
+                    console.error("Boo, TextDetection failed: " + e);
+                });
+        }
+    </script>
+</body>
+
+</html>
