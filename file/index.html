@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Shape Detection API Sample</title>
+</head>
+
+<body>
+  <input type="file" accept="image/*" capture="camera" id="camera"><br>
+  <img src="qr.jpg" id="image" alt="qrcode"><br>
+  <canvas id="canvas"></canvas><br>
+    <div>
+        Barcode text : <span id="rawValue"></span>
+    </div>
+
+    <script>
+        const camera = document.getElementById('camera');
+        const image = document.getElementById('image');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let scale = 1;
+        
+        camera.addEventListener('change', function(e) {
+          var file = e.target.files[0]; 
+          image.src = URL.createObjectURL(file);
+        });
+
+        image.onload = function()
+        {
+            canvas.width = image.width;
+            canvas.height = image.height;
+            ctx.drawImage(image,
+                0, 0, image.width, image.height,
+                0, 0, canvas.width, canvas.height);
+            scale = canvas.width / image.width;
+            qrdetect();
+        };
+
+        function qrdetect()
+        {
+            if (window.BarcodeDetector == undefined)
+            {
+                console.error('Barcode Detection not supported');
+                return;
+            }
+            var barcodeDetector = new BarcodeDetector();
+            barcodeDetector.detect(image)
+                .then(barcodes =>
+                {
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = 'red';
+                    for (let barcode of barcodes)
+                    {
+                        ctx.rect(Math.floor(barcode.boundingBox.x * scale),
+                            Math.floor(barcode.boundingBox.y * scale),
+                            Math.floor(barcode.boundingBox.width *
+                                scale),
+                            Math.floor(barcode.boundingBox.height *
+                                scale));
+                        ctx.stroke();
+                        console.log("value : " + barcode.rawValue);
+                        console.log(barcode);
+                        document.getElementById('rawValue').innerHTML =
+                            convertLink(barcode.rawValue);
+                    }
+                })
+                .catch((e) =>
+                {
+                    console.error("Boo, BarcodeDetection failed: " + e);
+                });
+        }
+
+        function convertLink(str) 
+        {
+          var regexpUrl = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))/;
+          var regexpLink = function(all, url, h, href) {
+            return '<a href="h' + href + '">' + url + '</a>';
+          }
+ 
+          return str.replace(regexpUrl, regexpLink);
+        }
+    </script>
+</body>
+
+</html>
