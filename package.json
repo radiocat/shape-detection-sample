@@ -9,6 +9,8 @@
   },
   "devDependencies": {},
   "scripts": {
+    "copy": "copyfiles -u 1 pwa/**/**/* pwa/**/* pwa/* ./",
+    "build": "npm run copy && workbox injectManifest workbox-config.js",
     "start": "node ./server.js 3000",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
