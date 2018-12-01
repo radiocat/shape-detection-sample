@@ -18,7 +18,7 @@ $ npm run serve
 
 [Barcode Detection](https://radiocat.github.io/shape-detection-sample/file/)
 
-## Use <video>
+## Use video tag
 
 [Barcode Detection](https://radiocat.github.io/shape-detection-sample/video/)
 
