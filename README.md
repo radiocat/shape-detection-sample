@@ -1,5 +1,5 @@
 # shape-detection-sample
-ShapeDetection Sample
+Shape Detection Sample
 
 
 ```

@@ -1,7 +1,7 @@
 {
   "name": "shape-detection-sample",
   "version": "1.0.0",
-  "description": "ShapeDetection Sample",
+  "description": "Shape Detection Sample",
   "main": "express.js",
   "dependencies": {
     "express": "^4.16.4",
