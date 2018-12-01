@@ -9,9 +9,9 @@
 </head>
 
 <body>
-  <input type="file" accept="image/*" capture="camera" id="camera"><br>
-  <img id="image" alt="qrcode"><br>
-  <canvas id="canvas"></canvas><br>
+    <input type="file" accept="image/*" capture="camera" id="camera"><br>
+    <img id="image" alt="qrcode"><br>
+    <canvas id="canvas"></canvas><br>
     <div>
         Barcode text : <span id="rawValue"></span>
     </div>
@@ -22,10 +22,11 @@
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         let scale = 1;
-        
-        camera.addEventListener('change', function(e) {
-          var file = e.target.files[0]; 
-          image.src = URL.createObjectURL(file);
+
+        camera.addEventListener('change', function(e)
+        {
+            var file = e.target.files[0];
+            image.src = URL.createObjectURL(file);
         });
 
         image.onload = function()
@@ -73,14 +74,15 @@
                 });
         }
 
-        function convertLink(str) 
+        function convertLink(str)
         {
-          var regexpUrl = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))/;
-          var regexpLink = function(all, url, h, href) {
-            return '<a href="h' + href + '">' + url + '</a>';
-          }
- 
-          return str.replace(regexpUrl, regexpLink);
+            var regexpUrl = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))/;
+            var regexpLink = function(all, url, h, href)
+            {
+                return '<a href="h' + href + '">' + url + '</a>';
+            }
+
+            return str.replace(regexpUrl, regexpLink);
         }
     </script>
 </body>
