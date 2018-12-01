@@ -25,7 +25,19 @@
         var videoTracks;
         var localStream = null;
         var captureTimer = null;
-        var fps = 10;
+        const fps = 10;
+        var medias = {
+            video:
+            {
+                width: 320,
+                height: 240,
+                facingMode:
+                {
+                    exact: "environment" // リアカメラにアクセス
+                }
+            },
+            audio: false
+        };
 
         var startbtn = document.getElementById('start');
         var stopbtn = document.getElementById('stop');
@@ -35,17 +47,7 @@
 
         startbtn.onclick = function()
         {
-            startbtn.disabled = true;
-            stopbtn.disabled = false;
-            navigator.mediaDevices.getUserMedia(
-                {
-                    video:
-                    {
-                        width: 320,
-                        height: 240
-                    },
-                    audio: false
-                })
+            navigator.mediaDevices.getUserMedia(medias)
                 .then(function(stream)
                 {
                     video.srcObject = stream;
@@ -117,16 +119,25 @@
                         console.error(
                             'BarcodeDetection is not enable!');
                     }
+                    startbtn.disabled = true;
+                    stopbtn.disabled = false;
                 }).catch(function(err)
                 {
-                    console.error(err);
+                    console.log(err);
+                    medias = {
+                        video:
+                        {
+                            width: 320,
+                            height: 240
+                        },
+                        audio: false
+                    };
+
                 });
         };
 
         stopbtn.onclick = function()
         {
-            startbtn.disabled = false;
-            stopbtn.disabled = true;
             clearInterval(captureTimer);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             localStream.getTracks().forEach(function(track)
@@ -135,6 +146,9 @@
             });
             localStream = null;
             video.srcObject = null;
+            startbtn.disabled = false;
+            stopbtn.disabled = true;
+
         };
 
         function convertLink(str)
