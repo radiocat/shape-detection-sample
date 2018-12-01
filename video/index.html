@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Barcode Detection Sample (video)</title>
+</head>
+
+<body>
+
+    <video id="player" muted autoplay></video>
+    <canvas id="snapshot" width=320 height=240></canvas>
+    <div>
+        Barcode text : <span id="rawValue"></span>
+    </div>
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+    <script>
+        var video = document.getElementById('player');
+        var canvas = document.getElementById('snapshot');
+        var ctx = canvas.getContext('2d');
+        var captureButton = document.getElementById('capture');
+        var videoTracks;
+        var localStream = null;
+        var captureTimer = null;
+        var fps = 10;
+
+        var startbtn = document.getElementById('start');
+        var stopbtn = document.getElementById('stop');
+
+        var startbtn = document.getElementById('start');
+        var stopbtn = document.getElementById('stop');
+
+        startbtn.onclick = function()
+        {
+            startbtn.disabled = true;
+            stopbtn.disabled = false;
+            navigator.mediaDevices.getUserMedia(
+                {
+                    video:
+                    {
+                        width: 320,
+                        height: 240
+                    },
+                    audio: false
+                })
+                .then(function(stream)
+                {
+                    video.srcObject = stream;
+                    localStream = stream;
+
+                    if (window.BarcodeDetector)
+                    {
+                        var detector = new BarcodeDetector();
+                        captureTimer = setInterval(function()
+                        {
+                            ctx.drawImage(video, 0, 0, canvas
+                                .width, canvas.height);
+                            var scale = 1;
+                            detector.detect(video).then(
+                                function(barcodes)
+                                {
+                                    ctx.lineWidth = 2;
+                                    ctx.strokeStyle =
+                                        'red';
+                                    for (var barcode of barcodes)
+                                    {
+                                        ctx.beginPath();
+                                        ctx.rect(Math.floor(
+                                                barcode
+                                                .boundingBox
+                                                .x *
+                                                scale
+                                            ),
+                                            Math.floor(
+                                                barcode
+                                                .boundingBox
+                                                .y *
+                                                scale
+                                            ),
+                                            Math.floor(
+                                                barcode
+                                                .boundingBox
+                                                .width *
+                                                scale
+                                            ),
+                                            Math.floor(
+                                                barcode
+                                                .boundingBox
+                                                .height *
+                                                scale
+                                            ));
+                                        ctx.stroke();
+                                        console.log(
+                                            "value : " +
+                                            barcode.rawValue
+                                        );
+                                        console.log(
+                                            barcode);
+                                        document.getElementById(
+                                                'rawValue'
+                                            ).innerHTML =
+                                            convertLink(
+                                                barcode.rawValue
+                                            );
+                                    }
+                                }).catch(function(err)
+                            {
+                                console.error(err);
+                            });
+                        }, 1000 / fps);
+                    }
+                    else
+                    {
+                        console.error(
+                            'BarcodeDetection is not enable!');
+                    }
+                }).catch(function(err)
+                {
+                    console.error(err);
+                });
+        };
+
+        stopbtn.onclick = function()
+        {
+            startbtn.disabled = false;
+            stopbtn.disabled = true;
+            clearInterval(captureTimer);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            localStream.getTracks().forEach(function(track)
+            {
+                track.stop();
+            });
+            localStream = null;
+            video.srcObject = null;
+        };
+
+        function convertLink(str)
+        {
+            var regexpUrl =
+                /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))/;
+            var regexpLink = function(all, url, h, href)
+            {
+                return '<a href="h' + href + '">' + url + '</a>';
+            }
+
+            return str.replace(regexpUrl, regexpLink);
+        };
+        // load時にstart状態にする
+        startbtn.click();
+    </script>
+</body>
+
+</html>
