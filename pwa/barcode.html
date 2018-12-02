@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Barcode Detection Sample (video)</title>
+</head>
+
+<body>
+
+    <video id="player" muted autoplay></video>
+    <div>
+        Barcode text : <span id="rawValue"></span>
+    </div>
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+    <script>
+        var video = document.getElementById('player');
+        var videoTracks;
+        var localStream = null;
+        var captureTimer = null;
+        const fps = 10;
+        var medias = {
+            video:
+            {
+                width: 320,
+                height: 240,
+                facingMode:
+                {
+                    exact: "environment"
+                }
+            },
+            audio: false
+        };
+
+        var startBtn = document.getElementById('start');
+        var stopBtn = document.getElementById('stop');
+
+        startBtn.onclick = function()
+        {
+            document.getElementById(
+                'rawValue'
+            ).innerHTML = "";
+            navigator.mediaDevices.getUserMedia(medias)
+                .then(function(stream)
+                {
+                    video.srcObject = stream;
+                    localStream = stream;
+
+                    if (window.BarcodeDetector)
+                    {
+                        var detector = new BarcodeDetector();
+                        captureTimer = setInterval(function()
+                        {
+
+                            detector.detect(video).then(
+                                function(barcodes)
+                                {
+                                    var barcode = null;
+                                    for (barcode of barcodes)
+                                    {
+
+                                        console.log(
+                                            "value : " +
+                                            barcode.rawValue
+                                        );
+                                        console.log(
+                                            barcode);
+                                        document.getElementById(
+                                                'rawValue'
+                                            ).innerHTML =
+                                            convertLink(
+                                                barcode.rawValue
+                                            );
+                                    }
+                                    if (barcode) stopVideo();
+                                }).catch(function(err)
+                            {
+                                console.log(err);
+                            });
+                        }, 1000 / fps);
+                    }
+                    else
+                    {
+                        console.error(
+                            'BarcodeDetection is not enable!');
+                    }
+                    startBtn.disabled = true;
+                    stopBtn.disabled = false;
+                }).catch(function(err)
+                {
+                    console.log(err);
+                    medias = {
+                        video:
+                        {
+                            width: 320,
+                            height: 240
+                        },
+                        audio: false
+                    };
+
+                });
+        };
+
+        function stopVideo()
+        {
+            clearInterval(captureTimer);
+            localStream.getTracks().forEach(function(track)
+            {
+                track.stop();
+            });
+            localStream = null;
+            video.srcObject = null;
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+
+        };
+
+        stopBtn.onclick = function()
+        {
+            stopVideo();
+        };
+
+        function convertLink(str)
+        {
+            var regexpUrl =
+                /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))/;
+            var regexpLink = function(all, url, h, href)
+            {
+                return '<a href="h' + href + '">' + url + '</a>';
+            }
+
+            return str.replace(regexpUrl, regexpLink);
+        };
+        // load時にstart状態にする
+        startBtn.click();
+    </script>
+</body>
+
+</html>
