@@ -25,7 +25,7 @@
 
         camera.addEventListener('change', function(e)
         {
-            var file = e.target.files[0];
+            const file = e.target.files[0];
             image.src = URL.createObjectURL(file);
         });
 
@@ -47,7 +47,7 @@
                 console.error('Barcode Detection not supported');
                 return;
             }
-            var barcodeDetector = new BarcodeDetector();
+            const barcodeDetector = new BarcodeDetector();
             barcodeDetector.detect(image)
                 .then(barcodes =>
                 {
@@ -76,8 +76,8 @@
 
         function convertLink(str)
         {
-            var regexpUrl = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))/;
-            var regexpLink = function(all, url, h, href)
+            const regexpUrl = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))/;
+            const regexpLink = function(all, url, h, href)
             {
                 return '<a href="h' + href + '">' + url + '</a>';
             }

@@ -18,24 +18,28 @@
     <button id="start">Start</button>
     <button id="stop">Stop</button>
     <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-          .then(registration => {
-            console.log(`Service Worker registered! Scope: ${registration.scope}`);
-          })
-          .catch(err => {
-            console.log(`Service Worker registration failed: ${err}`);
-          });
-      });
-    }
-      
-      var video = document.getElementById('player');
-        var videoTracks;
-        var localStream = null;
-        var captureTimer = null;
+        if ('serviceWorker' in navigator)
+        { 
+            window.addEventListener('load', () =>
+            {  
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration =>
+                    {
+                        console.log(`Service Worker registered! Scope: ${registration.scope}`);
+                    })
+                    .catch(err =>
+                    {
+                        console.error(`Service Worker registration failed: ${err}`);
+                    }); 
+            });
+        }
+
+        const video = document.getElementById('player');
+        let videoTracks;
+        let localStream = null;
+        let captureTimer = null;
         const fps = 10;
-        var medias = {
+        let medias = {
             video:
             {
                 width: 320,
@@ -48,8 +52,8 @@
             audio: false
         };
 
-        var startBtn = document.getElementById('start');
-        var stopBtn = document.getElementById('stop');
+        const startBtn = document.getElementById('start');
+        const stopBtn = document.getElementById('stop');
 
         startBtn.onclick = function()
         {
@@ -64,14 +68,14 @@
 
                     if (window.BarcodeDetector)
                     {
-                        var detector = new BarcodeDetector();
+                        const detector = new BarcodeDetector();
                         captureTimer = setInterval(function()
                         {
 
                             detector.detect(video).then(
                                 function(barcodes)
                                 {
-                                    var barcode = null;
+                                    let barcode = null;
                                     for (barcode of barcodes)
                                     {
 
@@ -138,9 +142,9 @@
 
         function convertLink(str)
         {
-            var regexpUrl =
+            const regexpUrl =
                 /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))/;
-            var regexpLink = function(all, url, h, href)
+            const regexpLink = function(all, url, h, href)
             {
                 return '<a href="h' + href + '">' + url + '</a>';
             }

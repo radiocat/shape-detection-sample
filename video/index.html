@@ -18,32 +18,28 @@
     <button id="start">Start</button>
     <button id="stop">Stop</button>
     <script>
-        var video = document.getElementById('player');
-        var canvas = document.getElementById('snapshot');
-        var ctx = canvas.getContext('2d');
-        var captureButton = document.getElementById('capture');
-        var videoTracks;
-        var localStream = null;
-        var captureTimer = null;
+        const video = document.getElementById('player');
+        const canvas = document.getElementById('snapshot');
+        const ctx = canvas.getContext('2d');
+        let videoTracks;
+        let localStream = null;
+        let captureTimer = null;
         const fps = 10;
-        var medias = {
+        let medias = {
             video:
             {
                 width: 320,
                 height: 240,
                 facingMode:
                 {
-                    exact: "environment" // リアカメラにアクセス
+                    exact: "environment" // リアカメラを使用
                 }
             },
             audio: false
         };
 
-        var startbtn = document.getElementById('start');
-        var stopbtn = document.getElementById('stop');
-
-        var startbtn = document.getElementById('start');
-        var stopbtn = document.getElementById('stop');
+        const startbtn = document.getElementById('start');
+        const stopbtn = document.getElementById('stop');
 
         startbtn.onclick = function()
         {
@@ -55,19 +51,19 @@
 
                     if (window.BarcodeDetector)
                     {
-                        var detector = new BarcodeDetector();
+                        const detector = new BarcodeDetector();
                         captureTimer = setInterval(function()
                         {
                             ctx.drawImage(video, 0, 0, canvas
                                 .width, canvas.height);
-                            var scale = 1;
+                            let scale = 1;
                             detector.detect(video).then(
                                 function(barcodes)
                                 {
                                     ctx.lineWidth = 2;
                                     ctx.strokeStyle =
                                         'red';
-                                    for (var barcode of barcodes)
+                                    for (let barcode of barcodes)
                                     {
                                         ctx.beginPath();
                                         ctx.rect(Math.floor(
@@ -123,7 +119,8 @@
                     stopbtn.disabled = false;
                 }).catch(function(err)
                 {
-                    console.log(err);
+                    console.error(err);
+                    // リアカメラが無い場合はそれ以外のカメラ
                     medias = {
                         video:
                         {
@@ -153,9 +150,9 @@
 
         function convertLink(str)
         {
-            var regexpUrl =
+            const regexpUrl =
                 /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))/;
-            var regexpLink = function(all, url, h, href)
+            const regexpLink = function(all, url, h, href)
             {
                 return '<a href="h' + href + '">' + url + '</a>';
             }

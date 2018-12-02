@@ -39,7 +39,7 @@
                 console.error('Text Detection not supported');
                 return;
             }
-            var textDetector = new TextDetector();
+            const textDetector = new TextDetector();
             textDetector.detect(image)
                 .then(texts =>
                 {

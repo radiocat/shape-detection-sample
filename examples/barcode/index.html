@@ -39,7 +39,7 @@
                 console.error('Barcode Detection not supported');
                 return;
             }
-            var barcodeDetector = new BarcodeDetector();
+            const barcodeDetector = new BarcodeDetector();
             barcodeDetector.detect(image)
                 .then(barcodes =>
                 {
