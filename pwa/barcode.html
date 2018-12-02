@@ -17,7 +17,19 @@
     <button id="start">Start</button>
     <button id="stop">Stop</button>
     <script>
-        var video = document.getElementById('player');
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => {
+            console.log(`Service Worker registered! Scope: ${registration.scope}`);
+          })
+          .catch(err => {
+            console.log(`Service Worker registration failed: ${err}`);
+          });
+      });
+    }
+      
+      var video = document.getElementById('player');
         var videoTracks;
         var localStream = null;
         var captureTimer = null;
