@@ -1,11 +1,9 @@
 # shape-detection-sample
 Shape Detection Sample
 
-
 ```
-$ cd [example | file | video]
 $ npm install
-$ npm run serve
+$ npm start
 ```
 
 ## Examples
@@ -22,4 +20,15 @@ $ npm run serve
 
 [Barcode Detection](https://radiocat.github.io/shape-detection-sample/video/)
 
+# Barcode Detection PWA
+
+[Barcode Detection PWA](https://radiocat.github.io/shape-detection-sample/barcode.html)
+
+Local build
+
+```
+$ npm install
+$ npm run build
+$ npm start
+```
 
