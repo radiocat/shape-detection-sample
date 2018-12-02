@@ -1,6 +1,14 @@
 # shape-detection-sample
 Shape Detection Sample
 
+Set `Enabled` on the Experimental Web Platform Features flag
+
+```
+chrome://flags/#enable-experimental-web-platform-features
+```
+
+Local build
+
 ```
 $ npm install
 $ npm start
